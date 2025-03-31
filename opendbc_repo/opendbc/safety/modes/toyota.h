@@ -10,6 +10,7 @@
   TOYOTA_BASE_TX_MSGS \
   {0x2E4, 0, 5, .check_relay = true}, \
   {0x343, 0, 8, .check_relay = false},  /* ACC cancel cmd */  \
+  {0x750, 0, 8, .check_relay = false},  /* radar diagnostic address */                                                                                                                                             \
 
 #define TOYOTA_COMMON_SECOC_TX_MSGS \
   TOYOTA_BASE_TX_MSGS \
@@ -27,7 +28,7 @@
   /* PCS_HUD */                        \
   {0x411, 0, 8, .check_relay = false}, \
   /* radar diagnostic address */       \
-  {0x750, 0, 8, .check_relay = false}, \
+  /* {0x750, 0, 8, .check_relay = false},*/ \
   /* ACC */                            \
   {0x343, 0, 8, .check_relay = true},  \
 
@@ -321,6 +322,7 @@ static bool toyota_tx_hook(const CANPacket_t *to_send) {
   }
 
   // UDS: Only tester present ("\x0F\x02\x3E\x00\x00\x00\x00\x00") allowed on diagnostics address
+  /*
   if (addr == 0x750) {
     // this address is sub-addressed. only allow tester present to radar (0xF)
     bool invalid_uds_msg = (GET_BYTES(to_send, 0, 4) != 0x003E020FU) || (GET_BYTES(to_send, 4, 4) != 0x0U);
@@ -328,6 +330,7 @@ static bool toyota_tx_hook(const CANPacket_t *to_send) {
       tx = 0;
     }
   }
+  */
 
   return tx;
 }
