@@ -133,4 +133,5 @@ inline static std::unordered_map<std::string, uint32_t> keys = {
     {"dp_lat_road_edge_detection", PERSISTENT},
     {"dp_ui_rainbow", PERSISTENT},
     {"dp_lon_downhill_coasting", PERSISTENT},
+    {"dp_toyota_door_auto_lock_unlock", PERSISTENT},
 };

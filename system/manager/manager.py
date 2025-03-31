@@ -55,6 +55,7 @@ def manager_init() -> None:
     ("dp_lat_road_edge_detection", "0"),
     ("dp_ui_rainbow", "0"),
     ("dp_lon_downhill_coasting", "0"),
+    ("dp_toyota_door_auto_lock_unlock", "0"),
   ]
 
   if params.get_bool("RecordFrontLock"):
