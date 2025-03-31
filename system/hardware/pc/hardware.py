@@ -14,6 +14,9 @@ class Pc(HardwareBase):
   def get_device_type(self):
     return "pc"
 
+  def get_device_mode(self):
+    return 0
+
   def reboot(self, reason=None):
     print("REBOOT!")
 
