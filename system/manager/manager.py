@@ -53,6 +53,7 @@ def manager_init() -> None:
     ("dp_device_mode", "0"),
     ("dp_general_is_rhd", "0"),
     ("dp_general_monitoring_disabled", "0"),
+    ("dp_toyota_stock_lon", "0"),
   ]
 
   if params.get_bool("RecordFrontLock"):
