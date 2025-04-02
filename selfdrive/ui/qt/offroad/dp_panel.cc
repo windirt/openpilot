@@ -151,6 +151,11 @@ void DPPanel::add_vag_toggles() {
       QString::fromUtf8("🐉 ") + tr("VW / Audi / Skoda"),
       "",
     },
+    {
+      "vag_pq_steering_patch",
+      tr("PQ Steering Patch"),
+      ""
+    },
   };
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
