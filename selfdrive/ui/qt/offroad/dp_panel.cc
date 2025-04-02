@@ -8,6 +8,11 @@ void DPPanel::add_general_toggles() {
       QString::fromUtf8("🐉 ") + tr("General"),
       "",
     },
+    {
+      "dp_ui_rainbow",
+      tr("Rainbow Driving Path"),
+      tr("Why not?"),
+    },
   };
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
