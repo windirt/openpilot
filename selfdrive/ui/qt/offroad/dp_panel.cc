@@ -135,6 +135,14 @@ DPPanel::DPPanel(SettingsWindow *parent) : ListWidget(parent) {
   } else if (brand == "volkswagen") {
     add_vag_toggles();
   }
+
+  auto resetBtn = new ButtonControl(tr("Reset dragonpilot settings"), tr("RESET"));
+  connect(resetBtn, &ButtonControl::clicked, [&]() {
+    if (ConfirmationDialog::confirm(tr("Are you sure you want to reset all settings?"), tr("Reset"), this)) {
+      params.putBool("dp_device_reset_conf", true);
+    }
+  });
+  addItem(resetBtn);
 }
 
 void DPPanel::expandToggleDescription(const QString &param) {
