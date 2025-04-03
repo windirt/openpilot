@@ -23,7 +23,7 @@ jobs:
 
       - name: Sync from sunnyhaibin
         run: |
-          git remote add sunnyhaibin https://github.com:sunnyhaibin/openpilot.git || true
+          git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
           git fetch sunnyhaibin dev-c3
           git checkout -B dev-c3 sunnyhaibin/dev-c3
           git push origin dev-c3 --force
@@ -33,7 +33,7 @@ jobs:
 
       - name: Sync pre-build from dragon-community
         run: |
-          git remote add dragon-community https://github.com:dragonpilot-community/dragonpilot.git || true
+          git remote add dragon-community https://github.com/dragonpilot-community/dragonpilot.git || true
           git fetch dragon-community pre-build
           git checkout -B pre-build dragon-community/pre-build
           git push origin pre-build --force
