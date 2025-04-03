@@ -174,6 +174,9 @@ class CarInterface(CarInterfaceBase):
     def default_longitudinal_tuning(): # stock comma
       tune.kiBP = [0., 5., 35.]
       tune.kiV = [3.6, 2.4, 1.5]
+      ret.vEgoStopping = 0.25
+      ret.vEgoStarting = 0.22
+      ret.stoppingDecelRate = 0.007
 
     tune = ret.longitudinalTuning
     if candidate in TSS2_CAR or ret.enableGasInterceptorDEPRECATED:
