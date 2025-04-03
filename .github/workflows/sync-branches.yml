@@ -31,8 +31,8 @@ jobs:
         run: |
           git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
           git fetch sunnyhaibin tn-prebuild
-          git checkout -B tn-prebuild sunnyhaibin/tn-prebuild
-          git push origin tn-prebuild --force
+          git checkout -B tn-prebuild sunnyhaibin/tn-prebuilt
+          git push origin tn-prebuilt --force
 
 
       - name: Sync pre-build from dragon-community
