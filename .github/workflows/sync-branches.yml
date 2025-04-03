@@ -30,7 +30,7 @@ jobs:
 
       - name: Sync pre-build from dragon-community
         run: |
-          git remote add dragon-community https://github.com/dragon-community/dragonpilot.git || true
+          git remote add dragon-community https://github.com/dragonpilot-community/dragonpilot.git || true
           git fetch dragon-community pre-build
           git checkout -B pre-build dragon-community/pre-build
           git push origin pre-build --force
