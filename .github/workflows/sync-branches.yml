@@ -21,12 +21,15 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
 
-      - name: Sync dev-c3 from sunnyhaibin
+      - name: Sync from sunnyhaibin
         run: |
           git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
           git fetch sunnyhaibin dev-c3
           git checkout -B dev-c3 sunnyhaibin/dev-c3
           git push origin dev-c3 --force
+          git fetch sunnyhaibin tn
+          git checkout -B tn sunnyhaibin/tn
+          git push origin tn --force
 
       - name: Sync pre-build from dragon-community
         run: |
