@@ -31,7 +31,7 @@ jobs:
         run: |
           git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
           git fetch sunnyhaibin tn-prebuilt
-          git checkout -B tn-prebuild sunnyhaibin/tn-prebuilt
+          git checkout -B tn-prebuilt sunnyhaibin/tn-prebuilt
           git push origin tn-prebuilt --force
 
 
