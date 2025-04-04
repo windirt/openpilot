@@ -249,6 +249,7 @@ void loggerd_thread() {
   std::map<std::string, EncoderInfo> encoder_infos_dict;
   for (const auto &cam : cameras_logged) {
     for (const auto &encoder_info : cam.encoder_infos) {
+      if (!encoder_info.record) continue;
       encoder_infos_dict[encoder_info.publish_name] = encoder_info;
       s.max_waiting++;
     }

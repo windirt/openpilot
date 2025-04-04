@@ -44,6 +44,10 @@ def register(show_spinner=False) -> str | None:
     dongle_id = UNREGISTERED_DONGLE_ID
     cloudlog.warning(f"missing public key: {pubkey}")
   elif dongle_id is None:
+    dp_device_mode = params.get("dp_device_mode")
+    if dp_device_mode is not None and int(dp_device_mode) == 2:
+      params.put("DongleId", UNREGISTERED_DONGLE_ID)
+      return dongle_id
     if show_spinner:
       spinner = Spinner()
       spinner.update("registering device")
@@ -74,7 +78,7 @@ def register(show_spinner=False) -> str | None:
       try:
         register_token = jwt.encode({'register': True, 'exp': datetime.now(UTC).replace(tzinfo=None) + timedelta(hours=1)}, private_key, algorithm='RS256')
         cloudlog.info("getting pilotauth")
-        resp = api_get("v2/pilotauth/", method='POST', timeout=15,
+        resp = api_get("v2/pilotauth/", method='POST', timeout=5,
                        imei=imei1, imei2=imei2, serial=serial, public_key=public_key, register_token=register_token)
 
         if resp.status_code in (402, 403):

@@ -13,6 +13,16 @@ void DPPanel::add_general_toggles() {
       tr("Rainbow Driving Path"),
       tr("Why not?"),
     },
+    {
+      "dp_general_is_rhd",
+      tr("Enable Right-Hand Drive Mode"),
+      tr("Allow openpilot to obey right-hand traffic conventions on right driver seat."),
+    },
+    {
+      "dp_general_monitoring_disabled",
+      tr("Disable Driver Monitoring"),
+      "",
+    },
   };
   std::vector<QString> display_off_mode_texts{tr("Std."), tr("MAIN+"), tr("OP+"), tr("MAIN-"), tr("OP-")};
   ButtonParamControl* display_off_mode_setting = new ButtonParamControl("dp_general_display_mode", tr("Display Mode"),
@@ -27,6 +37,9 @@ void DPPanel::add_general_toggles() {
       addItem(label);
       addItem(display_off_mode_setting);
       addItem(hide_hud);
+      continue;
+    }
+    if ((param == "dp_general_is_rhd" || param == "dp_general_monitoring_disabled") && uiState()->scene.dp_device_mode < 2) {
       continue;
     }
     auto toggle = new ParamControl(param, title, desc, "", this);

@@ -85,6 +85,10 @@ class HardwareBase(ABC):
     pass
 
   @abstractmethod
+  def get_device_mode(self):
+    pass
+
+  @abstractmethod
   def get_imei(self, slot) -> str:
     pass
 
