@@ -8,6 +8,11 @@ void DPPanel::add_general_toggles() {
       QString::fromUtf8("🐉 ") + tr("General"),
       "",
     },
+    {
+      "dp_ui_rainbow",
+      tr("Rainbow Driving Path"),
+      tr("Why not?"),
+    },
   };
   std::vector<QString> display_off_mode_texts{tr("Std."), tr("MAIN+"), tr("OP+"), tr("MAIN-"), tr("OP-")};
   ButtonParamControl* display_off_mode_setting = new ButtonParamControl("dp_general_display_mode", tr("Display Mode"),
