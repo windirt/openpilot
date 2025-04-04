@@ -404,7 +404,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   nav_btns = new QButtonGroup(this);
   for (auto &[name, panel] : panels) {
-    if (name == tr("Firehose") && uiState()->scene.dp_device_mode > 0) {
+    if (name == tr("Firehose") && uiState()->scene.dp_device_mode == 2) {
       continue;
     }
     QPushButton *btn = new QPushButton(name);
