@@ -36,32 +36,14 @@ no_amp() {
   fi
 }
 
-no_dongle() {
-  local dongle_id_file="/persist/comma/dongle_id"
-
-  if [[ ! -f "$dongle_id_file" ]]; then
-    return 0
-  fi
-
-  local dongle_id
-  dongle_id=$(cat "$dongle_id_file")
-  if [[ "$dongle_id" == "UnregisteredDevice" ]]; then
-    return 0
-  fi
-
-  return 1
-}
-
 function check_device_mode {
-  if no_amp && no_dongle; then
+  if no_amp; then
     echo "X3 Lite Mode"
     export DISABLE_DRIVER=1
     echo -n 2 > /data/params/d/dp_device_mode
-  elif no_dongle; then
-    echo -n 1 > /data/params/d/dp_device_mode
-    echo "X3 Mode"
   else
     echo "C3 Mode"
+    echo -n 0 > /data/params/d/dp_device_mode
   fi
 }
 
