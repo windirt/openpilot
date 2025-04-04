@@ -87,8 +87,11 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
 
   // set up uiState update for personality setting
   QObject::connect(uiState(), &UIState::uiUpdate, this, &TogglesPanel::updateState);
-
+  const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
   for (auto &[param, title, desc, icon] : toggle_defs) {
+    if ((param == "AlwaysOnDM" || param == "RecordFront") && lite_mode) {
+      continue;
+    }
     auto toggle = new ParamControl(param, title, desc, icon, this);
 
     bool locked = params.getBool((param + "Lock").toStdString());
@@ -186,21 +189,22 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   addItem(new LabelControl(tr("Dongle ID"), getDongleId().value_or(tr("N/A"))));
   addItem(new LabelControl(tr("Serial"), params.get("HardwareSerial").c_str()));
 
-  pair_device = new ButtonControl(tr("Pair Device"), tr("PAIR"),
-                                  tr("Pair your device with comma connect (connect.comma.ai) and claim your comma prime offer."));
-  connect(pair_device, &ButtonControl::clicked, [=]() {
-    PairingPopup popup(this);
-    popup.exec();
-  });
-  addItem(pair_device);
+  const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
+  if (!lite_mode) {
+    pair_device = new ButtonControl(tr("Pair Device"), tr("PAIR"),
+                                    tr("Pair your device with comma connect (connect.comma.ai) and claim your comma prime offer."));
+    connect(pair_device, &ButtonControl::clicked, [=]() {
+      PairingPopup popup(this);
+      popup.exec();
+    });
+    addItem(pair_device);
 
-  // offroad-only buttons
-
-  auto dcamBtn = new ButtonControl(tr("Driver Camera"), tr("PREVIEW"),
-                                   tr("Preview the driver facing camera to ensure that driver monitoring has good visibility. (vehicle must be off)"));
-  connect(dcamBtn, &ButtonControl::clicked, [=]() { emit showDriverView(); });
-  addItem(dcamBtn);
-
+    // offroad-only buttons
+    auto dcamBtn = new ButtonControl(tr("Driver Camera"), tr("PREVIEW"),
+                                     tr("Preview the driver facing camera to ensure that driver monitoring has good visibility. (vehicle must be off)"));
+    connect(dcamBtn, &ButtonControl::clicked, [=]() { emit showDriverView(); });
+    addItem(dcamBtn);
+  }
   auto resetCalibBtn = new ButtonControl(tr("Reset Calibration"), tr("RESET"), "");
   connect(resetCalibBtn, &ButtonControl::showDescriptionEvent, this, &DevicePanel::updateCalibDescription);
   connect(resetCalibBtn, &ButtonControl::clicked, [&]() {
@@ -241,9 +245,11 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   });
   addItem(translateBtn);
 
+  if (!lite_mode) {
   QObject::connect(uiState()->prime_state, &PrimeState::changed, [this] (PrimeState::Type type) {
     pair_device->setVisible(type == PrimeState::PRIME_TYPE_UNPAIRED);
   });
+  }
 //  QObject::connect(uiState(), &UIState::offroadTransition, [=](bool offroad) {
 //    for (auto btn : findChildren<ButtonControl *>()) {
 //      if (btn != pair_device) {
@@ -404,7 +410,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
   };
 
   nav_btns = new QButtonGroup(this);
+  const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
   for (auto &[name, panel] : panels) {
+    if (name == tr("Firehose") && lite_mode) {
+      continue;
+    }
     QPushButton *btn = new QPushButton(name);
     btn->setCheckable(true);
     btn->setChecked(nav_btns->buttons().size() == 0);

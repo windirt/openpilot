@@ -54,6 +54,12 @@ def only_onroad(started: bool, params: Params, CP: car.CarParams) -> bool:
 def only_offroad(started: bool, params: Params, CP: car.CarParams) -> bool:
   return not started
 
+def not_lite_mode(started: bool, params: Params, CP: car.CarParams) -> bool:
+  return started and int(params.get("dp_device_mode")) < 2
+
+def is_lite_mode(started: bool, params: Params, CP: car.CarParams) -> bool:
+  return started and int(params.get("dp_device_mode")) == 2
+
 def or_(*fns):
   return lambda *args: operator.or_(*(fn(*args) for fn in fns))
 
@@ -61,7 +67,7 @@ def and_(*fns):
   return lambda *args: operator.and_(*(fn(*args) for fn in fns))
 
 procs = [
-  DaemonProcess("manage_athenad", "system.athena.manage_athenad", "AthenadPid"),
+  DaemonProcess("manage_athenad", "system.athena.manage_athenad", "AthenadPid", enabled=not os.getenv("DISABLE_DRIVER")),
 
   NativeProcess("loggerd", "system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"], only_onroad),
@@ -72,15 +78,15 @@ procs = [
   PythonProcess("webcamerad", "tools.webcam.camerad", driverview, enabled=WEBCAM),
   NativeProcess("logcatd", "system/logcatd", ["./logcatd"], only_onroad),
   NativeProcess("proclogd", "system/proclogd", ["./proclogd"], only_onroad),
-  PythonProcess("micd", "system.micd", iscar),
+  PythonProcess("micd", "system.micd", and_(iscar, not_lite_mode)),
   PythonProcess("timed", "system.timed", always_run, enabled=not PC),
 
   PythonProcess("modeld", "selfdrive.modeld.modeld", only_onroad),
-  PythonProcess("dmonitoringmodeld", "selfdrive.modeld.dmonitoringmodeld", driverview, enabled=(WEBCAM or not PC)),
+  PythonProcess("dmonitoringmodeld", "selfdrive.modeld.dmonitoringmodeld", driverview, enabled=(WEBCAM or not PC) and not os.getenv("DISABLE_DRIVER")),
 
   NativeProcess("sensord", "system/sensord", ["./sensord"], only_onroad, enabled=not PC),
   NativeProcess("ui", "selfdrive/ui", ["./ui"], always_run, watchdog_max_dt=(5 if not PC else None)),
-  PythonProcess("soundd", "selfdrive.ui.soundd", only_onroad),
+  PythonProcess("soundd", "selfdrive.ui.soundd", and_(only_onroad, not_lite_mode)),
   PythonProcess("locationd", "selfdrive.locationd.locationd", only_onroad),
   NativeProcess("_pandad", "selfdrive/pandad", ["./pandad"], always_run, enabled=False),
   PythonProcess("calibrationd", "selfdrive.locationd.calibrationd", only_onroad),
@@ -90,7 +96,8 @@ procs = [
   PythonProcess("selfdrived", "selfdrive.selfdrived.selfdrived", only_onroad),
   PythonProcess("card", "selfdrive.car.card", only_onroad),
   PythonProcess("deleter", "system.loggerd.deleter", always_run),
-  PythonProcess("dmonitoringd", "selfdrive.monitoring.dmonitoringd", driverview, enabled=(WEBCAM or not PC)),
+  PythonProcess("dmonitoringd", "selfdrive.monitoring.dmonitoringd", and_(driverview, not_lite_mode), enabled=(WEBCAM or not PC) and not os.getenv("DISABLE_DRIVER")),
+  PythonProcess("dpmonitoringd", "selfdrive.monitoring.dpmonitoringd", is_lite_mode, enabled=os.getenv("DISABLE_DRIVER")),
   PythonProcess("qcomgpsd", "system.qcomgpsd.qcomgpsd", qcomgps, enabled=TICI),
   PythonProcess("pandad", "selfdrive.pandad.pandad", always_run),
   PythonProcess("paramsd", "selfdrive.locationd.paramsd", only_onroad),

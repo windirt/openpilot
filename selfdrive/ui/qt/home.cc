@@ -131,6 +131,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
   center_layout = new QStackedLayout();
 
   QWidget *home_widget = new QWidget(this);
+  if (std::atoi(params.get("dp_device_mode").c_str()) != 2)
   {
     QHBoxLayout *home_layout = new QHBoxLayout(home_widget);
     home_layout->setContentsMargins(0, 0, 0, 0);

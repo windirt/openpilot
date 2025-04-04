@@ -8,11 +8,25 @@ void DPPanel::add_general_toggles() {
       QString::fromUtf8("🐉 ") + tr("General"),
       "",
     },
+    {
+      "dp_device_is_rhd",
+      tr("Enable Right-Hand Drive Mode"),
+      tr("Allow openpilot to obey right-hand traffic conventions on right driver seat."),
+    },
+    {
+      "dp_device_monitoring_disabled",
+      tr("Disable Driver Monitoring"),
+      "",
+    },
   };
+  const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
       auto label = new LabelControl(title, "");
       addItem(label);
+      continue;
+    }
+    if ((param == "dp_device_is_rhd" || param == "dp_device_monitoring_disabled") && lite_mode) {
       continue;
     }
     auto toggle = new ParamControl(param, title, desc, "", this);

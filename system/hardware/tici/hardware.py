@@ -96,6 +96,14 @@ def get_device_type():
     model = f.read().strip('\x00')
   return model.split('comma ')[-1]
 
+@lru_cache
+def get_device_mode():
+  try:
+    with open("/data/params/d/dp_device_mode") as f:
+      return int(f.read().strip('\x00'))
+  except FileNotFoundError:
+    return 0
+
 class Tici(HardwareBase):
   @cached_property
   def bus(self):
@@ -112,7 +120,7 @@ class Tici(HardwareBase):
 
   @cached_property
   def amplifier(self):
-    if self.get_device_type() == "mici":
+    if self.get_device_type() == "mici" or self.get_device_mode() == 2:
       return None
     return Amplifier()
 
@@ -122,6 +130,9 @@ class Tici(HardwareBase):
 
   def get_device_type(self):
     return get_device_type()
+
+  def get_device_mode(self):
+    return get_device_mode()
 
   def reboot(self, reason=None):
     subprocess.check_output(["sudo", "reboot"])
@@ -205,7 +216,7 @@ class Tici(HardwareBase):
     return str(self.get_modem().Get(MM_MODEM, 'EquipmentIdentifier', dbus_interface=DBUS_PROPS, timeout=TIMEOUT))
 
   def get_network_info(self):
-    if self.get_device_type() == "mici":
+    if self.get_device_type() == "mici" or self.get_device_mode() == 2:
       return None
     try:
       modem = self.get_modem()
@@ -297,7 +308,7 @@ class Tici(HardwareBase):
       return None
 
   def get_modem_temperatures(self):
-    if self.get_device_type() == "mici":
+    if self.get_device_type() == "mici" or self.get_device_mode() == 2:
       return []
     timeout = 0.2  # Default timeout is too short
     try:
