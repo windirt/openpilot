@@ -131,4 +131,5 @@ inline static std::unordered_map<std::string, uint32_t> keys = {
     {"dp_general_is_rhd", PERSISTENT},
     {"dp_general_monitoring_disabled", PERSISTENT},
     {"dp_vag_a0_sng", PERSISTENT},
+    {"dp_vag_pq_steering_patch", PERSISTENT},
 };
