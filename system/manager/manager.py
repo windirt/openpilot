@@ -54,6 +54,7 @@ def manager_init() -> None:
     ("dp_general_is_rhd", "0"),
     ("dp_general_monitoring_disabled", "0"),
     ("dp_toyota_door_auto_lock_unlock", "0"),
+    ("dp_toyota_tss1_sng", "0"),
   ]
 
   if params.get_bool("RecordFrontLock"):
