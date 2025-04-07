@@ -54,11 +54,19 @@ void DPPanel::add_longitudinal_toggles() {
       QString::fromUtf8("🐉 ") + tr("Longitudinal Ctrl"),
       "",
     },
+    {
+      "dp_lon_downhill_coasting",
+      QString::fromUtf8("🚧 ") + tr("Enable Downhill Coasting (DHC)"),
+      tr("Downhill Coasting (DHC) allows the vehicle to maintain or slightly increase speed on downhill slopes without braking."),
+    },
   };
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
       auto label = new LabelControl(title, "");
       addItem(label);
+      continue;
+    }
+    if (param == "dp_lon_downhill_coasting" && !vehicle_has_long_ctrl) {
       continue;
     }
     auto toggle = new ParamControl(param, title, desc, "", this);
