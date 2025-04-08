@@ -40,6 +40,9 @@ def manager_init() -> None:
     ("OpenpilotEnabledToggle", "1"),
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
     ("DisableLogging", "0"),
+    ("dp_device_is_rhd", "0"),
+    ("dp_device_monitoring_disabled", "0"),
+    ("dp_device_beep", "0"),
   ]
 
   if params.get_bool("RecordFrontLock"):
@@ -76,7 +79,8 @@ def manager_init() -> None:
   if reg_res:
     dongle_id = reg_res
   else:
-    raise Exception(f"Registration failed for device {serial}")
+    dongle_id = "UnregisteredDevice"
+    # raise Exception(f"Registration failed for device {serial}")
   os.environ['DONGLE_ID'] = dongle_id  # Needed for swaglog
   os.environ['GIT_ORIGIN'] = build_metadata.openpilot.git_normalized_origin # Needed for swaglog
   os.environ['GIT_BRANCH'] = build_metadata.channel # Needed for swaglog
