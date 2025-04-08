@@ -58,6 +58,8 @@ def manager_init() -> None:
     ("dp_toyota_door_auto_lock_unlock", "0"),
     ("dp_toyota_tss1_sng", "0"),
     ("dp_toyota_stock_lon", "0"),
+    ("dp_vag_a0_sng", "0"),
+    ("dp_vag_pq_steering_patch", "0"),
   ]
 
   if params.get_bool("RecordFrontLock"):
