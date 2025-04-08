@@ -14,6 +14,8 @@ from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDX
 from openpilot.selfdrive.controls.lib.drive_helpers import CONTROL_N, get_speed_error
 from openpilot.selfdrive.car.cruise import V_CRUISE_MAX, V_CRUISE_UNSET
 from openpilot.common.swaglog import cloudlog
+from openpilot.common.params import Params
+from openpilot.selfdrive.controls.lib.dhc import DHC
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 A_CRUISE_MAX_VALS = [1.6, 1.2, 0.8, 0.6]
@@ -84,6 +86,7 @@ class LongitudinalPlanner:
     self.a_desired_trajectory = np.zeros(CONTROL_N)
     self.j_desired_trajectory = np.zeros(CONTROL_N)
     self.solverExecutionTime = 0.0
+    self.dhc = DHC(Params().get_bool("dp_lon_downhill_coasting"))
 
   @staticmethod
   def parse_model(model_msg, model_error):
@@ -156,6 +159,9 @@ class LongitudinalPlanner:
 
     if force_slow_decel:
       v_cruise = 0.0
+
+    self.dhc.update_states(sm['carControl'], sm['radarState'], v_ego, v_cruise)
+    accel_clip[0] = self.dhc.set_min_accel(accel_clip[0])
 
     self.mpc.set_weights(prev_accel_constraint, personality=sm['selfdriveState'].personality)
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
