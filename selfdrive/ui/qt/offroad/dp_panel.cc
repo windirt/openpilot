@@ -20,10 +20,17 @@ void DPPanel::add_general_toggles() {
     },
   };
   const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
+  std::vector<QString> display_off_mode_texts{tr("Std."), tr("MAIN+"), tr("OP+"), tr("MAIN-"), tr("OP-")};
+  ButtonParamControl* display_off_mode_setting = new ButtonParamControl("dp_ui_display_moe", tr("Display Mode"),
+                                          tr("Std. - Stock behavior.\nMAIN+ - ACC MAIN on = Display ON.\nOP+ - OP enabled = Display ON.\nMAIN- - ACC MAIN on = Display OFF\nOP- - OP enabled = Display OFF."),
+                                          "",
+                                          display_off_mode_texts, 200);
+
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
       auto label = new LabelControl(title, "");
       addItem(label);
+      addItem(display_off_mode_setting);
       continue;
     }
     if ((param == "dp_device_is_rhd" || param == "dp_device_monitoring_disabled") && lite_mode) {

@@ -64,6 +64,7 @@ typedef struct UIScene {
   uint64_t started_frame;
   int dp_device_mode;
   bool alka_active;
+  int display_mode;
 } UIScene;
 
 class UIState : public QObject {
@@ -117,6 +118,7 @@ private:
   FirstOrderFilter brightness_filter;
   QFuture<void> brightness_future;
 
+  bool applyDisplayMode(const UIState &s, int timeout);
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);
   void setAwake(bool on);
