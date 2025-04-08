@@ -165,6 +165,11 @@ void DPPanel::add_vag_toggles() {
       tr("Enable MQB A0 SnG Mod"),
       "",
     },
+    {
+      "vag_pq_steering_patch",
+      tr("PQ Steering Patch"),
+      ""
+    },
   };
   for (auto &[param, title, desc] : toggle_defs) {
     if (param == "") {
