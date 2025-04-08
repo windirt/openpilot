@@ -27,8 +27,8 @@ QString getVersion() {
 
 QString getBrand() {
   const int device_mode = std::atoi(Params().get("dp_device_mode").c_str());
-  return QObject::tr("dragonpilot") + (device_mode == 2 ? QString::fromStdString(" - X3 Lite") :
-                                      (device_mode == 1 ? QString::fromStdString(" - X3") :
+  return QObject::tr("dragonpilot") + (device_mode == 2 ? QString::fromStdString(" - Lite") :
+                                      (device_mode == 1 ? QString::fromStdString(" - O3") :
                                       QString("")));
 }
 

@@ -40,7 +40,7 @@ void DPPanel::add_general_toggles() {
       addItem(hide_hud);
       continue;
     }
-    if ((param == "dp_device_is_rhd" || param == "dp_device_monitoring_disabled") && lite_mode) {
+    if ((param == "dp_device_is_rhd" || param == "dp_device_monitoring_disabled") && !lite_mode) {
       continue;
     }
     auto toggle = new ParamControl(param, title, desc, "", this);

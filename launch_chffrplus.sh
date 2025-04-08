@@ -38,7 +38,7 @@ no_amp() {
 
 function check_device_mode {
   if no_amp; then
-    echo "X3 Lite Mode"
+    echo "O3 Lite Mode"
     export DISABLE_DRIVER=1
     echo -n 2 > /data/params/d/dp_device_mode
   else
