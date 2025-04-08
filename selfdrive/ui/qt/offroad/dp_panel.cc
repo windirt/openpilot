@@ -18,6 +18,11 @@ void DPPanel::add_general_toggles() {
       tr("Disable Driver Monitoring"),
       "",
     },
+    {
+      "dp_ui_rainbow",
+      tr("Rainbow Driving Path"),
+      tr("Why not?"),
+    },
   };
   const bool lite_mode = std::atoi(Params().get("dp_device_mode").c_str()) == 2;
   std::vector<QString> display_off_mode_texts{tr("Std."), tr("MAIN+"), tr("OP+"), tr("MAIN-"), tr("OP-")};

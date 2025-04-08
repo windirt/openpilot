@@ -4,6 +4,7 @@
 #include <QPolygonF>
 
 #include "selfdrive/ui/ui.h"
+#include "selfdrive/ui/qt/widgets/rainbowpath.h"
 
 class ModelRenderer {
 public:
@@ -36,4 +37,5 @@ private:
   QPointF lead_vertices[2] = {};
   Eigen::Matrix3f car_space_transform = Eigen::Matrix3f::Zero();
   QRectF clip_region;
+  RainbowPath rainbow;
 };
