@@ -124,4 +124,6 @@ inline static std::unordered_map<std::string, uint32_t> keys = {
     {"dp_device_monitoring_disabled", PERSISTENT},
     {"dp_lat_alka", PERSISTENT},
     {"dp_ui_display_moe", PERSISTENT},
+    {"dp_device_model_selected", PERSISTENT},
+    {"dp_device_model_list", PERSISTENT},
 };
