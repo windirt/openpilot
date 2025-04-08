@@ -68,6 +68,7 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.dp_device_mode = std::atoi(params.get("dp_device_mode").c_str());
   s->scene.display_mode = std::atoi(params.get("dp_ui_display_moe").c_str());
+  s->scene.dp_ui_hide_hud_speed_kph = std::atoi(params.get("dp_ui_hide_hud_speed_kph").c_str());
 }
 
 void UIState::updateStatus() {

@@ -65,6 +65,7 @@ typedef struct UIScene {
   int dp_device_mode;
   bool alka_active;
   int display_mode;
+  int dp_ui_hide_hud_speed_kph = 0;
 } UIScene;
 
 class UIState : public QObject {
