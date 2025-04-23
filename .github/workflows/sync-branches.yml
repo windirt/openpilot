@@ -19,13 +19,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-
-      - name: Sync dev-c3 from sunnyhaibin
-        run: |
-          git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
-          git fetch sunnyhaibin dev-c3
-          git checkout -B dev-c3 sunnyhaibin/dev-c3
-          git push origin dev-c3 --force
           
       - name: Sync tn from sunnyhaibin
         run: |
@@ -36,7 +29,6 @@ jobs:
 
       - name: Sync dev-c3-new from sunnyhaibin
         run: |
-          git remote add sunnyhaibin https://github.com/sunnyhaibin/openpilot.git || true
           git fetch sunnyhaibin dev-c3-new
           git checkout -B dev-c3-new sunnyhaibin/dev-c3-new
           git push origin dev-c3-new --force
