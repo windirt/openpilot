@@ -4,6 +4,9 @@
 
 #include "selfdrive/ui/qt/util.h"
 
+#include <QrCode.hpp>
+using qrcodegen::QrCode;
+
 void Sidebar::drawMetric(QPainter &p, const QPair<QString, QString> &label, QColor c, int y) {
   const QRect rect = {30, y, 240, 126};
 
@@ -106,6 +109,13 @@ void Sidebar::updateState(const UIState &s) {
     pandaStatus = {{tr("NO"), tr("PANDA")}, danger_color};
   }
   setProperty("pandaStatus", QVariant::fromValue(pandaStatus));
+  // rick - update every 5 secs
+  if (sm.frame % UI_FREQ*5 == 0) {
+    ip_addr = QString::fromStdString(Params().get("dp_device_ip"));
+    ip_changed = ip_addr != ip_addr_prev;
+    setProperty("ipAddr", ip_addr);
+    ip_addr_prev = ip_addr;
+  }
 }
 
 void Sidebar::paintEvent(QPaintEvent *event) {
@@ -119,7 +129,45 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   p.setOpacity(settings_pressed ? 0.65 : 1.0);
   p.drawPixmap(settings_btn.x(), settings_btn.y(), settings_img);
   p.setOpacity(onroad && flag_pressed ? 0.65 : 1.0);
-  p.drawPixmap(home_btn.x(), home_btn.y(), onroad ? flag_img : home_img);
+  {
+    if (ip_qrcode_cache.isNull() || ip_changed) {
+      QSize ip_qrcode_img_size = QSize(250, 250);
+      // Recreate the compass image with the current size
+      ip_qrcode_cache = QImage(ip_qrcode_img_size, QImage::Format_ARGB32);
+      ip_qrcode_cache.fill(Qt::transparent); // Fill with a transparent background
+      // Create a QPainter for the image
+      QPainter cache_painter(&ip_qrcode_cache);
+
+      QString url = "http://" + ipAddr + ":5000/";
+      QrCode qr = QrCode::encodeText(url.toUtf8().data(), QrCode::Ecc::LOW);
+
+      const int s = qr.getSize();
+      const float aspect = 250/250;
+      const float size = (aspect > 1.0)? 250 : 250;
+      const float scale = size/(s+2);
+
+      // NOTE: For performance reasons my implementation only draws the foreground parts in supplied color.
+      // It expects background to be prepared already (in white or whatever is preferred).
+      cache_painter.setPen(Qt::NoPen);
+      cache_painter.setBrush(QColor(0xff, 0xff, 0xff, 0xff));
+      for(int y=0; y < s; y++) {
+        for(int x=0; x < s; x++) {
+          const int color=qr.getModule(x, y);  // 0 for white, 1 for black
+          if(0x0 != color) {
+            const double rx1 = (x+1)*scale, ry1=(y+1)*scale;
+            QRectF r(rx1, ry1, scale, scale);
+            cache_painter.drawRects(&r,1);
+          }
+        }
+      }
+      cache_painter.end();
+    }
+  }
+  if (ipAddr.isEmpty()) {
+    p.drawPixmap(home_btn.x(), home_btn.y(), onroad ? flag_img : home_img);
+  } else {
+    p.drawImage(home_btn.x()-30, home_btn.y()-30, ip_qrcode_cache);
+  }
   p.setOpacity(1.0);
 
   // network
@@ -135,6 +183,12 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   p.setPen(QColor(0xff, 0xff, 0xff));
   const QRect r = QRect(58, 247, width() - 100, 50);
   p.drawText(r, Qt::AlignLeft | Qt::AlignVCenter, net_type);
+
+  // IP
+  p.setFont(InterFont(30));
+  p.setPen(QColor(0xff, 0xff, 0xff));
+  const QRect ip = QRect(40, 260, 230, 100);
+  p.drawText(ip, Qt::AlignCenter, ipAddr);
 
   // metrics
   drawMetric(p, temp_status.first, temp_status.second, 338);
