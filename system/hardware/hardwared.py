@@ -26,6 +26,7 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.system.hardware.power_monitoring import PowerMonitoring
 from openpilot.system.hardware.fan_controller import TiciFanController
 from openpilot.system.version import terms_version, training_version
+import socket
 
 ThermalStatus = log.DeviceState.ThermalStatus
 NetworkType = log.DeviceState.NetworkType
@@ -456,6 +457,33 @@ def hardware_thread(end_event, hw_queue) -> None:
     should_start_prev = should_start
 
 
+def ip_thread(end_event, hw_queue):
+  count = 0
+  params = Params()
+  s = None
+  ip = None
+  ip_prev = None
+  while not end_event.is_set():
+    # update IP every 5s
+    if count % int(5. / DT_HW) == 0:
+      try:
+        # doesn't even have to be reachable
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('10.255.255.255', 1))
+        ip = s.getsockname()[0]
+      except:
+        ip = ''
+      finally:
+        if s:
+          s.close()
+
+      if ip != ip_prev:
+        params.put('dp_device_ip', ip.strip())
+      ip_prev = ip
+
+    count += 1
+    time.sleep(DT_HW)
+
 def main():
   hw_queue = queue.Queue(maxsize=1)
   end_event = threading.Event()
@@ -463,6 +491,7 @@ def main():
   threads = [
     threading.Thread(target=hw_state_thread, args=(end_event, hw_queue)),
     threading.Thread(target=hardware_thread, args=(end_event, hw_queue)),
+    threading.Thread(target=ip_thread, args=(end_event, hw_queue)),
   ]
 
   if TICI:
