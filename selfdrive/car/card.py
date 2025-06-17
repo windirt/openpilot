@@ -115,6 +115,10 @@ class Car:
       self.CI, self.CP = CI, CI.CP
       self.RI = RI
 
+    if self.params.get_bool("dp_lon_ext_radar_found") and self.params.get_bool("dp_lon_ext_radar"):
+      from opendbc.car.radar_interface import RadarInterface
+      self.RI = RadarInterface(self.CI.CP)
+
     self.CP.alternativeExperience = 0
     if dp_params & structs.DPFlags.LateralALKA:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.ALKA
