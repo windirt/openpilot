@@ -108,6 +108,9 @@ class Car:
       if self.params.get_bool("dp_vag_a0_sng"):
         dp_params |= structs.DPFlags.VagA0SnG
 
+      if self.params.get_bool("dp_vag_pq_steering_patch"):
+        dp_params |= structs.DPFlags.VAGPQSteeringPatch
+
       self.CI = get_car(*self.can_callbacks, obd_callback(self.params), alpha_long_allowed, is_release, num_pandas, dp_params, cached_params)
       self.RI = interfaces[self.CI.CP.carFingerprint].RadarInterface(self.CI.CP)
       self.CP = self.CI.CP
