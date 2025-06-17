@@ -13,7 +13,7 @@ LongCtrlState = structs.CarControl.Actuators.LongControlState
 class CarController(CarControllerBase):
   def __init__(self, dbc_names, CP):
     super().__init__(dbc_names, CP)
-    self.CCP = CarControllerParams(CP)
+    self.CCP = CarControllerParams(CP, CP.flags & VolkswagenFlags.AVOID_EPS_LOCKOUT)
     self.CCS = pqcan if CP.flags & VolkswagenFlags.PQ else mqbcan
     self.packer_pt = CANPacker(dbc_names[Bus.pt])
     self.ext_bus = CANBUS.pt if CP.networkLocation == structs.CarParams.NetworkLocation.fwdCamera else CANBUS.cam
@@ -44,7 +44,13 @@ class CarController(CarControllerBase):
       # of HCA disabled; this is done whenever output happens to be zero.
 
       if CC.latActive:
-        new_torque = int(round(actuators.torque * self.CCP.STEER_MAX))
+        if VolkswagenFlags.AVOID_EPS_LOCKOUT:
+          #根據速度縮放new_torque扭力上限
+          torque_scale = np.interp(CS.out.vEgo, [0.4, 3.5, 4.0], [0.8, 0.95, 1.0])
+          scaled_steer_max = self.CCP.STEER_MAX * torque_scale
+          new_torque = int(round(actuators.torque * scaled_steer_max))
+        else:
+          new_torque = int(round(actuators.torque * self.CCP.STEER_MAX))
         apply_torque = apply_driver_steer_torque_limits(new_torque, self.apply_torque_last, CS.out.steeringTorque, self.CCP)
         self.hca_frame_timer_running += self.CCP.STEER_STEP
         if self.apply_torque_last == apply_torque:
