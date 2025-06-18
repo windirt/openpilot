@@ -337,7 +337,7 @@ public:
       QSpinBox::up-button  {
         subcontrol-origin: margin;
         subcontrol-position: center right;
-        image: url(../assets/offroad/icon_plus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icon_plus.png);
         right: 1px;
         height: 80px;
         width: 80px;
@@ -345,7 +345,7 @@ public:
       QSpinBox::down-button  {
         subcontrol-origin: margin;
         subcontrol-position: center left;
-        image: url(../assets/offroad/icon_minus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icon_minus.png);
         left: 1px;
         height: 80px;
         width: 80px;
