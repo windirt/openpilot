@@ -337,7 +337,7 @@ public:
       QSpinBox::up-button  {
         subcontrol-origin: margin;
         subcontrol-position: center right;
-        image: url(../../dragonpilot/selfdrive/assets/icon_plus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icons/icon_plus.png);
         right: 1px;
         height: 80px;
         width: 80px;
@@ -345,7 +345,7 @@ public:
       QSpinBox::down-button  {
         subcontrol-origin: margin;
         subcontrol-position: center left;
-        image: url(../../dragonpilot/selfdrive/assets/icon_minus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icons/icon_minus.png);
         left: 1px;
         height: 80px;
         width: 80px;
@@ -402,7 +402,7 @@ public:
       QDoubleSpinBox::up-button  {
         subcontrol-origin: margin;
         subcontrol-position: center right;
-        image: url(../../dragonpilot/selfdrive/assets/icon_plus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icons/icon_plus.png);
         right: 1px;
         height: 80px;
         width: 80px;
@@ -410,7 +410,7 @@ public:
       QDoubleSpinBox::down-button  {
         subcontrol-origin: margin;
         subcontrol-position: center left;
-        image: url(../../dragonpilot/selfdrive/assets/icon_minus.png);
+        image: url(../../dragonpilot/selfdrive/assets/icons/icon_minus.png);
         left: 1px;
         height: 80px;
         width: 80px;
