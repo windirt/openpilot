@@ -464,18 +464,25 @@ def hardware_thread(end_event, hw_queue) -> None:
 def ip_thread(end_event, hw_queue):
   count = 0
   params = Params()
-  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  s = None
+  ip = None
+  ip_prev = None
   while not end_event.is_set():
-    # update IP every 10s
-    if count % int(10. / DT_HW) == 0:
+    # update IP every 5s
+    if count % int(5. / DT_HW) == 0:
       try:
-        # doesn't even have to be reachable
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(('10.255.255.255', 1))
         ip = s.getsockname()[0]
       except:
         ip = ''
+      finally:
+        if s:
+          s.close()
 
-      params.put_nonblocking('dp_device_ip', ip.strip())
+      if ip != ip_prev:
+        params.put('dp_device_ip', ip.strip())
+      ip_prev = ip
 
     count += 1
     time.sleep(DT_HW)
