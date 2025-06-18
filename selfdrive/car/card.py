@@ -133,7 +133,7 @@ class Car:
       self.CI, self.CP = CI, CI.CP
       self.RI = RI
 
-    if self.params.get_bool("dp_lon_ext_radar_found") and self.params.get_bool("dp_lon_ext_radar"):
+    if self.params.get_bool("dp_lon_ext_radar"):
       from opendbc.car.radar_interface import RadarInterface
       self.RI = RadarInterface(self.CI.CP)
 
