@@ -19,15 +19,18 @@ from typing import List, Tuple
 DREL_OFFSET = -1.2 # car head to radar
 MAX_OBJECTS = 50
 MAX_LAT_DIST = 3.6 # lat distance
-RCS_MIN = 0.
-RCS_MAX = 30.
+# RCS_MIN = 0.
+# RCS_MAX = 30.
 
 STATIONARY_OBJ_VREL = -20.
 STATIONARY_OBJ_LAT_DIST = 3.
 
+CLOSED_OBJ_DREL = 10
+CLOSED_OBJ_YREL = 2
+
 # Constants for static point filtering
 # 33hz * 5 secs for decay
-INITIAL_SCORE = 33*5
+INITIAL_SCORE = 50*3
 
 def _create_radar_parser():
   messages = [("ObjectData", 0)]
@@ -138,8 +141,8 @@ class RadarInterface(RadarInterfaceBase):
     # published to liveTracks via card.py
     # liveTracks is 20hz
     # radard.py subscribed liveTracks, and is running at 20hz
-    # publish at 33 hz
-    if self.frame % 3 == 0:
+    # publish at 50 hz
+    if self.frame % 2 == 0:
       for track_id in list(self._radar_points.keys()):
         should_remove = False
         if track_id in self._radar_point_properties:
@@ -150,17 +153,21 @@ class RadarInterface(RadarInterfaceBase):
           if not should_remove and self._radar_point_properties[track_id]['score'] < 0:
             should_remove = True
 
-          # on coming
-          if not should_remove and self._radar_point_properties[track_id]['movement'] == 2:
+          # ignore closed objects on both side
+          if not should_remove and self._radar_points[track_id].dRel < CLOSED_OBJ_DREL and abs(self._radar_points[track_id].yRel) > CLOSED_OBJ_YREL:
             should_remove = True
+
+          # on coming
+          # if not should_remove and self._radar_point_properties[track_id]['movement'] == 2:
+          #   should_remove = True
 
           # ignore stationary object on the left/right when driving fast
           if not should_remove and self._radar_points[track_id].vRel < STATIONARY_OBJ_VREL and abs(self._radar_points[track_id].yRel) > STATIONARY_OBJ_LAT_DIST:
             should_remove = True
 
           # RCS (radar cross section) not within the range
-          if not should_remove and not (RCS_MIN <= self._radar_point_properties[track_id]['rcs'] <= RCS_MAX):
-            should_remove = True
+          # if not should_remove and not (RCS_MIN <= self._radar_point_properties[track_id]['rcs'] <= RCS_MAX):
+          #  should_remove = True
 
           # object is outside the lat dist (too far left or too far right)
           if not should_remove and abs(self._radar_points[track_id].yRel) > MAX_LAT_DIST:
