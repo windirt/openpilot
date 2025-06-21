@@ -10,7 +10,7 @@ if [ -s /data/params/d/dp_device_model_selected ]; then
 fi
 
 if [ -z "$AGNOS_VERSION" ]; then
-  export AGNOS_VERSION="12.3"
+  export AGNOS_VERSION="12.4"
 fi
 
 export STAGING_ROOT="/data/safe_staging"
